@@ -1,4 +1,4 @@
-package com.pshetye.timelines;
+package com.pshetye.tweets;
 
 import java.util.ArrayList;
 

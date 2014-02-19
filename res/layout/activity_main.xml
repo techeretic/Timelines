@@ -2,7 +2,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent">    
+
+    <!-- Framelayout to display Fragments -->
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <!-- Listview to display slider menu -->
     <ListView
@@ -15,39 +21,5 @@
         android:dividerHeight="1dp"        
         android:listSelector="@drawable/list_selector"
         android:background="@color/list_background"/>
-    
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:id="@+id/lview"
-        android:orientation="horizontal" >
-
-	    <EditText
-	        android:id="@+id/ScreenName"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.5"
-	        android:ems="10"
-	        android:gravity="center_horizontal|center_vertical|center"
-	        android:hint="@string/ScreenNameHint" />
-	
-	    <Button
-	        android:id="@+id/FetchTweets"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="0.5"
-	        android:gravity="center_horizontal|center_vertical|center"
-	        android:text="@string/BtnText" />
-
-    </LinearLayout>
-        
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@id/lview"
-        android:stackFromBottom="false"
-        android:transcriptMode="alwaysScroll" />
     
 </android.support.v4.widget.DrawerLayout>

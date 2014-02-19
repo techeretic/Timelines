@@ -1,6 +1,6 @@
-package com.pshetye.timelines;
+package com.pshetye.tweets;
 
-import com.pshetye.timelines.TwitterUser;
+import com.pshetye.tweets.TwitterUser;
 import com.google.gson.annotations.SerializedName;
 
 public class Tweet {

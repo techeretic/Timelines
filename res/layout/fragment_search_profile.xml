@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    
+    
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/lview"
+        android:orientation="horizontal" >
+
+	    <EditText
+	        android:id="@+id/ScreenName"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5"
+	        android:ems="10"
+	        android:gravity="center_horizontal|center_vertical|center"
+	        android:hint="@string/ScreenNameHint" />
+	
+	    <Button
+	        android:id="@+id/FetchTweets"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5"
+	        android:gravity="center_horizontal|center_vertical|center"
+	        android:text="@string/BtnText" />
+
+    </LinearLayout>
+        
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@id/lview"
+        android:stackFromBottom="false"
+        android:transcriptMode="alwaysScroll" />
+    
+
+</RelativeLayout>

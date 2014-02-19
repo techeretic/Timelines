@@ -1,6 +1,10 @@
-package com.pshetye.timelines;
+package com.pshetye.navdrawer;
 
 import java.util.ArrayList;
+
+import com.pshetye.timelines.R;
+import com.pshetye.timelines.R.id;
+import com.pshetye.timelines.R.layout;
 
 import android.app.Activity;
 import android.content.Context;
