@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -12,8 +13,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.pshetye.navdrawer.NavDrawerItem;
 import com.pshetye.navdrawer.NavDrawerListAdapter;
@@ -33,6 +36,12 @@ public class MainActivity extends Activity {
 
 	// used to store app title
 	private CharSequence mTitle;
+	
+	final static String CONSUMER_KEY = "W4I3aTIbbWeQ60gjBprQ";
+	final static String CONSUMER_SECRET = "Fo1vW5VYehSqTr7ZrMMJlGqVcD688Szy4dDdJYI4k";
+	final static String TwitterTokenURL = "https://api.twitter.com/oauth2/token";
+	final static String TwitterStreamURL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=";
+	final static String TwitterUsersURL = "https://api.twitter.com/1.1/users/lookup.json?screen_name=";
 
 
 	@Override
@@ -59,6 +68,9 @@ public class MainActivity extends Activity {
 		navMenuIcons.recycle();
 
 		mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+		
+		mTitle = "Timelines";
+		mDrawerTitle = "Select Option";
 
 		// setting the nav drawer list adapter
 		adapter = new NavDrawerListAdapter(getApplicationContext(),
@@ -157,4 +169,16 @@ public class MainActivity extends Activity {
 		}
 		
 	}
+    
+    public static void hideSoftKeyboard (Activity activity, View view) {
+    	InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+    	imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
+	}
+
+    public static void showToast(Toast t, Activity a, String ToastText){
+    	if (t != null)
+			t.cancel();
+		t = Toast.makeText(a, ToastText, Toast.LENGTH_SHORT);
+		t.show();
+    }
 }

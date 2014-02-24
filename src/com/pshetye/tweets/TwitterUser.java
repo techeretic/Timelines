@@ -13,6 +13,16 @@ public class TwitterUser {
 	
 	@SerializedName("profile_image_url")
 	private String profileImageUrl;
+	
+	private int Id;
+	
+	public int getId() {
+		return Id;
+	}
+	
+	public void setId(int Id) {
+		this.Id = Id;
+	}
 
 	public String getProfileImageUrl() {
 		return profileImageUrl;
@@ -36,5 +46,16 @@ public class TwitterUser {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public TwitterUser(int Id, String screenName, String name, String profileImageUrl){
+		this.Id = Id;
+		this.screenName = screenName;
+		this.name = name;
+		this.profileImageUrl = profileImageUrl;
+	}
+
+	public TwitterUser() {
+		// TODO Auto-generated constructor stub
 	}
 }

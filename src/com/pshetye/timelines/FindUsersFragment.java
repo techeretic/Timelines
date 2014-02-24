@@ -37,25 +37,26 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.pshetye.tweets.Twitter;
 
-public class AddProfileFragment extends Fragment {
+public class FindUsersFragment extends Fragment {
 	
-	EditText ScreenName;
+	EditText SearchText;
 	ListView listview;
-	Button FetchTweets;
-	MyListAdapter myladapter;
+	Button FetchUsers;
+	
 	Toast t;
+	MyListAdapter myladapter;
 	
 	boolean validHandle;
-	
-	public AddProfileFragment(){}
+
+	public FindUsersFragment() {
+		//Standard Constructor
+	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
  
         View rootView = inflater.inflate(R.layout.fragment_search_profile, container, false);
-        
-        validHandle = true;
         
         return rootView;
     }
@@ -65,16 +66,18 @@ public class AddProfileFragment extends Fragment {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
         
-        FetchTweets = (Button) getActivity().findViewById(R.id.FetchTweets);
-		ScreenName = (EditText) getActivity().findViewById(R.id.ScreenName);
+		FetchUsers = (Button) getActivity().findViewById(R.id.FetchTweets);
+		SearchText = (EditText) getActivity().findViewById(R.id.ScreenName);
 		listview = (ListView) getActivity().findViewById(R.id.list);
+		
+		FetchUsers.setText("Search Users");
+		SearchText.setHint("Type Name to search");
 
-
-		FetchTweets.setOnClickListener(new View.OnClickListener() {			
+		FetchUsers.setOnClickListener(new View.OnClickListener() {			
 			@Override
 			public void onClick(View v) {
-				if (!ScreenName.getText().toString().isEmpty()) {
-					downloadTweets(ScreenName.getText().toString());
+				if (!SearchText.getText().toString().isEmpty()) {
+					FetchTwitterUsers(SearchText.getText().toString());
 				}				
 				MainActivity.hideSoftKeyboard(getActivity(), getView());
 			}
@@ -83,16 +86,16 @@ public class AddProfileFragment extends Fragment {
 	}
 	
 	// download twitter timeline after first checking to see if there is a network connection
-	public void downloadTweets(String ScreenName) {
+	public void FetchTwitterUsers(String SearchText) {
 		ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
 		if (networkInfo != null && networkInfo.isConnected()) {
-			new DownloadTwitterTask().execute(ScreenName);
+			new DownloadTwitterTask().execute(SearchText);
 		} else {
 			MainActivity.showToast(t, getActivity(), "No network connection available.");
 		}
-	}		
+	}
 
 	// Uses an AsyncTask to download a Twitter user's timeline
 	private class DownloadTwitterTask extends AsyncTask<String, Void, String> {
@@ -102,7 +105,7 @@ public class AddProfileFragment extends Fragment {
 			String result = null;
 
 			if (screenNames.length > 0) {
-				result = getTwitterStream(screenNames[0]);
+				result = getTwitterUsers(screenNames[0]);
 			}
 			return result;
 		}
@@ -116,7 +119,8 @@ public class AddProfileFragment extends Fragment {
 				if (validHandle == true) {
 		
 					// send the tweets to the adapter for rendering
-					myladapter = new MyListAdapter(getActivity(), android.R.layout.simple_list_item_activated_2, getActivity(), twits);
+					myladapter = new MyListAdapter(getActivity(), android.R.layout.simple_list_item_activated_2, 
+							getActivity(), twits);
 					listview.setAdapter(myladapter);
 					listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 				}
@@ -125,7 +129,7 @@ public class AddProfileFragment extends Fragment {
 			} catch (NullPointerException ex) {
 				// just eat the exception
 				Log.i("Pratham", "Invaid Twitter Handle - onPostExecute");
-				ScreenName.setText("");
+				SearchText.setText("");
 			}
 		}
 
@@ -142,7 +146,7 @@ public class AddProfileFragment extends Fragment {
 					Log.i("Pratham", "Invalid Twitter Handle");
 					MainActivity.showToast(t, getActivity(), "Invalid Twitter Handle");	
 					validHandle = false;	
-					ScreenName.setText("");				
+					SearchText.setText("");				
 				}
 			}
 			return twits;
@@ -159,7 +163,7 @@ public class AddProfileFragment extends Fragment {
 					// just eat the exception
 					MainActivity.showToast(t, getActivity(), "Invalid Twitter Handle");	
 					validHandle = false;	
-					ScreenName.setText("");
+					SearchText.setText("");
 				}
 			}
 			return auth;
@@ -193,8 +197,8 @@ public class AddProfileFragment extends Fragment {
 			}
 			return sb.toString();
 		}
-
-		private String getTwitterStream(String screenName) {
+		
+		private String getTwitterUsers(String screenName) {
 			String results = null;
 
 			// Step 1: Encode consumer key and secret
@@ -238,4 +242,5 @@ public class AddProfileFragment extends Fragment {
 			return results;
 		}
 	}
+	
 }
