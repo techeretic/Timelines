@@ -14,6 +14,10 @@ public class TwitterUser {
 	@SerializedName("profile_image_url")
 	private String profileImageUrl;
 	
+	@SerializedName("location")
+	private String location;
+
+	@SerializedName("id")
 	private int Id;
 	
 	public int getId() {
@@ -46,6 +50,14 @@ public class TwitterUser {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getLocation() {
+		return this.location;
+	}
+	
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 	public TwitterUser(int Id, String screenName, String name, String profileImageUrl){

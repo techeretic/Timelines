@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.pshetye.database.DatabaseHelper;
 import com.pshetye.navdrawer.NavDrawerItem;
 import com.pshetye.navdrawer.NavDrawerListAdapter;
 
@@ -33,6 +34,8 @@ public class MainActivity extends Activity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	// nav drawer title
 	private CharSequence mDrawerTitle;
+	
+	public static DatabaseHelper db;
 
 	// used to store app title
 	private CharSequence mTitle;
@@ -48,6 +51,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		db = new DatabaseHelper(this);
 				
 		// load slide menu items
 		navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
@@ -63,6 +68,7 @@ public class MainActivity extends Activity {
 
 		// adding nav drawer items to array
 		navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
+		navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
 		
 		// Recycle the typed array
 		navMenuIcons.recycle();
@@ -131,10 +137,10 @@ public class MainActivity extends Activity {
 		case 0:
 			fragment = new AddProfileFragment();
 			break;
-			/*
 		case 1:
-			fragment = new FindPeopleFragment();
+			fragment = new FindUsersFragment();
 			break;
+			/*
 		case 2:
 			fragment = new PhotosFragment();
 			break;

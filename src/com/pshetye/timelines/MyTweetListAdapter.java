@@ -13,12 +13,12 @@ import android.widget.TextView;
 import com.pshetye.tweets.Tweet;
 import com.pshetye.tweets.Twitter;
 
-public class MyListAdapter extends ArrayAdapter<Tweet> {
+public class MyTweetListAdapter extends ArrayAdapter<Tweet> {
 	 private List<Tweet> Tweets;
 	 
 	 private Activity activity;
 	 
-	 public MyListAdapter(Context context, int textViewResourceId, Activity activity, Twitter twits) {
+	 public MyTweetListAdapter(Context context, int textViewResourceId, Activity activity, Twitter twits) {
 		 super(context, textViewResourceId, twits);
 		 this.Tweets = twits;
 		 this.activity = activity;

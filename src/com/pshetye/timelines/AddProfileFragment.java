@@ -18,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -42,8 +43,9 @@ public class AddProfileFragment extends Fragment {
 	EditText ScreenName;
 	ListView listview;
 	Button FetchTweets;
-	MyListAdapter myladapter;
+	MyTweetListAdapter myladapter;
 	Toast t;
+	ProgressDialog progressDialog;
 	
 	boolean validHandle;
 	
@@ -68,7 +70,6 @@ public class AddProfileFragment extends Fragment {
         FetchTweets = (Button) getActivity().findViewById(R.id.FetchTweets);
 		ScreenName = (EditText) getActivity().findViewById(R.id.ScreenName);
 		listview = (ListView) getActivity().findViewById(R.id.list);
-
 
 		FetchTweets.setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -97,6 +98,16 @@ public class AddProfileFragment extends Fragment {
 	// Uses an AsyncTask to download a Twitter user's timeline
 	private class DownloadTwitterTask extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
 		@Override
 		protected String doInBackground(String... screenNames) {
 			String result = null;
@@ -111,14 +122,17 @@ public class AddProfileFragment extends Fragment {
 		@Override
 		protected void onPostExecute(String result) {
 			try {
+
+	            //MainActivity.db.addTwitterUser(twiU);
 				Twitter twits = jsonToTwitter(result);
 				
 				if (validHandle == true) {
 		
 					// send the tweets to the adapter for rendering
-					myladapter = new MyListAdapter(getActivity(), android.R.layout.simple_list_item_activated_2, getActivity(), twits);
+					myladapter = new MyTweetListAdapter(getActivity(), android.R.layout.simple_list_item_activated_2, getActivity(), twits);
 					listview.setAdapter(myladapter);
 					listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		            progressDialog.dismiss();
 				}
 			} catch (IllegalStateException ex) {
 				// just eat the exception
@@ -132,6 +146,10 @@ public class AddProfileFragment extends Fragment {
 		// converts a string of JSON data into a Twitter object
 		private Twitter jsonToTwitter(String result) {
 			Twitter twits = null;
+			if (result != null)
+				Log.i("PRATHAM","STREAM RESULT = " + result);
+			else
+				Log.i("PRATHAM","RESULT = NULL");
 			if (result != null && result.length() > 0) {
 				try {
 					Gson gson = new Gson();

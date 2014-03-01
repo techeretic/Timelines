@@ -18,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,7 +36,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.pshetye.tweets.Twitter;
+import com.pshetye.tweets.TwitterUsers;
 
 public class FindUsersFragment extends Fragment {
 	
@@ -44,7 +45,8 @@ public class FindUsersFragment extends Fragment {
 	Button FetchUsers;
 	
 	Toast t;
-	MyListAdapter myladapter;
+	MyUserListAdapter myladapter;
+	ProgressDialog progressDialog;
 	
 	boolean validHandle;
 
@@ -70,7 +72,7 @@ public class FindUsersFragment extends Fragment {
 		SearchText = (EditText) getActivity().findViewById(R.id.ScreenName);
 		listview = (ListView) getActivity().findViewById(R.id.list);
 		
-		FetchUsers.setText("Search Users");
+		FetchUsers.setText("Add User(s)");
 		SearchText.setHint("Type Name to search");
 
 		FetchUsers.setOnClickListener(new View.OnClickListener() {			
@@ -100,6 +102,16 @@ public class FindUsersFragment extends Fragment {
 	// Uses an AsyncTask to download a Twitter user's timeline
 	private class DownloadTwitterTask extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
 		@Override
 		protected String doInBackground(String... screenNames) {
 			String result = null;
@@ -114,15 +126,18 @@ public class FindUsersFragment extends Fragment {
 		@Override
 		protected void onPostExecute(String result) {
 			try {
-				Twitter twits = jsonToTwitter(result);
+				TwitterUsers twits = jsonToTwitter(result);
 				
 				if (validHandle == true) {
 		
 					// send the tweets to the adapter for rendering
-					myladapter = new MyListAdapter(getActivity(), android.R.layout.simple_list_item_activated_2, 
+					myladapter = new MyUserListAdapter(getActivity(), android.R.layout.simple_list_item_activated_2, 
 							getActivity(), twits);
+					Log.i("PRATHAM","INSIDE onPostExecute, twits.size() = " + twits.size());
+					Log.i("PRATHAM","INSIDE onPostExecute, twits = " + twits.get(0).getName());
 					listview.setAdapter(myladapter);
 					listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		            progressDialog.dismiss();
 				}
 			} catch (IllegalStateException ex) {
 				// just eat the exception
@@ -134,21 +149,33 @@ public class FindUsersFragment extends Fragment {
 		}
 
 		// converts a string of JSON data into a Twitter object
-		private Twitter jsonToTwitter(String result) {
-			Twitter twits = null;
+		private TwitterUsers jsonToTwitter(String result) {
+			TwitterUsers twits = null;
+			if (result != null)
+				Log.i("PRATHAM","STREAM RESULT = " + result);
+			else
+				Log.i("PRATHAM","RESULT = NULL");
 			if (result != null && result.length() > 0) {
 				try {
 					Gson gson = new Gson();
-					twits = gson.fromJson(result, Twitter.class);
+					twits = gson.fromJson(result, TwitterUsers.class);
 					validHandle = true;
 				} catch (JsonSyntaxException ex) {
 					// just eat the exception
-					Log.i("Pratham", "Invalid Twitter Handle");
+					Log.i("Pratham", "Invalid Twitter Handle 1 ");
 					MainActivity.showToast(t, getActivity(), "Invalid Twitter Handle");	
 					validHandle = false;	
 					SearchText.setText("");				
 				}
+			} else {
+				// just eat the exception
+				Log.i("Pratham", "result might be NULL");
+				if (result != null)
+					Log.i("PRATHAM","RESULT = " + result);
+				else
+					Log.i("PRATHAM","RESULT = NULL");
 			}
+			Log.i("PRATHAM","twits.size() = " + twits.size());
 			return twits;
 		}
 
@@ -161,6 +188,7 @@ public class FindUsersFragment extends Fragment {
 					auth = gson.fromJson(rawAuthorization, Authenticated.class);
 				} catch (IllegalStateException ex) {
 					// just eat the exception
+					Log.i("Pratham", "Invalid Twitter Handle 2 ");
 					MainActivity.showToast(t, getActivity(), "Invalid Twitter Handle");	
 					validHandle = false;	
 					SearchText.setText("");
@@ -203,6 +231,7 @@ public class FindUsersFragment extends Fragment {
 
 			// Step 1: Encode consumer key and secret
 			try {
+				Log.i("PRATHAM","Inside getTwitterUsers");
 				// URL encode the consumer key and secret
 				String urlApiKey = URLEncoder.encode(MainActivity.CONSUMER_KEY, "UTF-8");
 				String urlApiSecret = URLEncoder.encode(MainActivity.CONSUMER_SECRET, "UTF-8");
@@ -221,13 +250,16 @@ public class FindUsersFragment extends Fragment {
 				httpPost.setEntity(new StringEntity("grant_type=client_credentials"));
 				String rawAuthorization = getResponseBody(httpPost);
 				Authenticated auth = jsonToAuthenticated(rawAuthorization);
+				
+				Log.i("PRATHAM","auth.access_token = " + auth.access_token);
+				Log.i("PRATHAM","auth.token_type = " + auth.token_type);
 
 				// Applications should verify that the value associated with the
 				// token_type key of the returned object is bearer
 				if (auth != null && auth.token_type.equals("bearer")) {
 
 					// Step 3: Authenticate API requests with bearer token
-					HttpGet httpGet = new HttpGet(MainActivity.TwitterStreamURL + screenName);
+					HttpGet httpGet = new HttpGet(MainActivity.TwitterUsersURL + screenName);
 					
 					// construct a normal HTTPS request and include an Authorization
 					// header with the value of Bearer <>
