@@ -14,11 +14,17 @@ public class TwitterUser {
 	@SerializedName("profile_image_url")
 	private String profileImageUrl;
 	
+	@SerializedName("profile_image_url_https")
+	private String profileImageUrlHttps;
+	
 	@SerializedName("location")
 	private String location;
 
 	@SerializedName("id")
 	private int Id;
+	
+	@SerializedName("description")
+	private String description;
 	
 	public int getId() {
 		return Id;
@@ -32,12 +38,28 @@ public class TwitterUser {
 		return profileImageUrl;
 	}
 
+	public String getProfileImageUrlHttps() {
+		return profileImageUrlHttps;
+	}
+
 	public String getScreenName() {
 		return screenName;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public void setProfileImageUrl(String profileImageUrl) {
 		this.profileImageUrl = profileImageUrl;
+	}
+
+	public void setProfileImageUrlHttps(String profileImageUrlHttps) {
+		this.profileImageUrlHttps = profileImageUrlHttps;
 	}
 
 	public void setScreenName(String screenName) {

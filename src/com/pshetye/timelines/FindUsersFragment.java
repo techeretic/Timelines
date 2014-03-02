@@ -133,8 +133,6 @@ public class FindUsersFragment extends Fragment {
 					// send the tweets to the adapter for rendering
 					myladapter = new MyUserListAdapter(getActivity(), android.R.layout.simple_list_item_activated_2, 
 							getActivity(), twits);
-					Log.i("PRATHAM","INSIDE onPostExecute, twits.size() = " + twits.size());
-					Log.i("PRATHAM","INSIDE onPostExecute, twits = " + twits.get(0).getName());
 					listview.setAdapter(myladapter);
 					listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		            progressDialog.dismiss();
@@ -143,7 +141,6 @@ public class FindUsersFragment extends Fragment {
 				// just eat the exception
 			} catch (NullPointerException ex) {
 				// just eat the exception
-				Log.i("Pratham", "Invaid Twitter Handle - onPostExecute");
 				SearchText.setText("");
 			}
 		}
@@ -151,10 +148,6 @@ public class FindUsersFragment extends Fragment {
 		// converts a string of JSON data into a Twitter object
 		private TwitterUsers jsonToTwitter(String result) {
 			TwitterUsers twits = null;
-			if (result != null)
-				Log.i("PRATHAM","STREAM RESULT = " + result);
-			else
-				Log.i("PRATHAM","RESULT = NULL");
 			if (result != null && result.length() > 0) {
 				try {
 					Gson gson = new Gson();
@@ -162,20 +155,13 @@ public class FindUsersFragment extends Fragment {
 					validHandle = true;
 				} catch (JsonSyntaxException ex) {
 					// just eat the exception
-					Log.i("Pratham", "Invalid Twitter Handle 1 ");
 					MainActivity.showToast(t, getActivity(), "Invalid Twitter Handle");	
 					validHandle = false;	
 					SearchText.setText("");				
 				}
 			} else {
 				// just eat the exception
-				Log.i("Pratham", "result might be NULL");
-				if (result != null)
-					Log.i("PRATHAM","RESULT = " + result);
-				else
-					Log.i("PRATHAM","RESULT = NULL");
 			}
-			Log.i("PRATHAM","twits.size() = " + twits.size());
 			return twits;
 		}
 
@@ -273,6 +259,5 @@ public class FindUsersFragment extends Fragment {
 			}
 			return results;
 		}
-	}
-	
+	}	
 }
