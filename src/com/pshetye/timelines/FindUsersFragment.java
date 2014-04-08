@@ -17,6 +17,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,9 +30,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -49,10 +54,17 @@ public class FindUsersFragment extends Fragment {
 	ProgressDialog progressDialog;
 	
 	boolean validHandle;
+	
+	OnTwitterUserSelectedListener mCallBack;
 
 	public FindUsersFragment() {
 		//Standard Constructor
 	}
+	
+	// Container Activity must implement this interface
+    public interface OnTwitterUserSelectedListener {
+        public void onUserSelected(String ScreenName, String profileURL);
+    }
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +74,19 @@ public class FindUsersFragment extends Fragment {
         
         return rootView;
     }
+	
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		
+		try {
+			mCallBack = (OnTwitterUserSelectedListener) activity;
+		} catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnTwitterUserSelectedListener");
+        }
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -83,6 +108,17 @@ public class FindUsersFragment extends Fragment {
 				}				
 				MainActivity.hideSoftKeyboard(getActivity(), getView());
 			}
+		});
+		
+		listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				mCallBack.onUserSelected(((TextView) view.findViewById(R.id.Name)).getText().toString(),
+									((ImageView) view.findViewById(R.id.Profile)).getContentDescription().toString());
+			}
+			
 		});
 		
 	}

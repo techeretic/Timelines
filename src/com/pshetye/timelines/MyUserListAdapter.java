@@ -60,6 +60,8 @@ public class MyUserListAdapter extends ArrayAdapter<TwitterUser> {
 				 description.setText(user.getDescription());
 				 
 				 imageDownloader.download(user.getProfileImageUrlHttps(), profile);
+				 
+				 profile.setContentDescription(user.getProfileImageUrlHttps());
 			 }
 			 name = null;
 			 screenname = null;

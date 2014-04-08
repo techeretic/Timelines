@@ -22,4 +22,6 @@
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Select</string>
+    <string name="default_welcome_message">Welcome to Timelines</string>
+    <string name="default_tag_line">Be on Twitter without actually being on Twitter</string>
 </resources>

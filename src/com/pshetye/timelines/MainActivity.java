@@ -22,7 +22,7 @@ import com.pshetye.database.DatabaseHelper;
 import com.pshetye.navdrawer.NavDrawerItem;
 import com.pshetye.navdrawer.NavDrawerListAdapter;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements FindUsersFragment.OnTwitterUserSelectedListener{
 	
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
@@ -104,6 +104,8 @@ public class MainActivity extends Activity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		
+		displayView(-1);
 	}
 
 	@Override
@@ -134,6 +136,9 @@ public class MainActivity extends Activity {
 		
 		Fragment fragment = null;
 		switch (position) {
+		case -1: 
+			fragment = new DefaultFragment();
+			break;
 		case 0:
 			fragment = new AddProfileFragment();
 			break;
@@ -163,11 +168,13 @@ public class MainActivity extends Activity {
 			fragmentManager.beginTransaction()
 					.replace(R.id.frame_container, fragment).commit();
 
-			// update selected item and title, then close the drawer
-			mDrawerList.setItemChecked(position, true);
-			mDrawerList.setSelection(position);
-			setTitle(navMenuTitles[position]);
-			mDrawerLayout.closeDrawer(mDrawerList);
+			if (position >= 0) {
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerList.setSelection(position);
+				setTitle(navMenuTitles[position]);
+				mDrawerLayout.closeDrawer(mDrawerList);
+			}
 			
 		} else {
 			// error in creating fragment
@@ -187,4 +194,24 @@ public class MainActivity extends Activity {
 		t = Toast.makeText(a, ToastText, Toast.LENGTH_SHORT);
 		t.show();
     }
+
+	@Override
+	public void onUserSelected(String ScreenName, String profileURL) {
+		// TODO Auto-generated method stub
+		Fragment frag = new AddProfileFragment();
+		Bundle user = new Bundle();
+		user.putString("screenName", ScreenName);
+		user.putString("profileURL", profileURL);
+		frag.setArguments(user);
+		
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.frame_container, frag).commit();
+
+		// update selected item and title, then close the drawer
+		mDrawerList.setItemChecked(0, true);
+		mDrawerList.setSelection(0);
+		setTitle(navMenuTitles[0]);
+		mDrawerLayout.closeDrawer(mDrawerList);
+	}
 }

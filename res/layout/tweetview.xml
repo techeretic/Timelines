@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.90"
         android:id="@+id/theTweet"
-        android:textSize="12sp" />
+        android:textSize="16sp" />
     
     <TextView 
         android:layout_width="fill_parent"
@@ -17,7 +17,7 @@
         android:layout_weight="0.10"
         android:textStyle="italic"
         android:id="@+id/theDate"
-        android:textSize="8sp" />
+        android:textSize="12sp" />
     
     <View
         android:layout_width="match_parent"

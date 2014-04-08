@@ -25,13 +25,15 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -46,8 +48,15 @@ public class AddProfileFragment extends Fragment {
 	MyTweetListAdapter myladapter;
 	Toast t;
 	ProgressDialog progressDialog;
+	LinearLayout fetchTimeline, userProfile;
+	TextView screenname;
+	ImageView profile;
 	
-	boolean validHandle;
+	String strScreenName;
+	
+	private final ImageDownloader imageDownloader = new ImageDownloader();
+	
+	boolean validHandle;	
 	
 	public AddProfileFragment(){}
 	
@@ -66,21 +75,43 @@ public class AddProfileFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-        
-        FetchTweets = (Button) getActivity().findViewById(R.id.FetchTweets);
-		ScreenName = (EditText) getActivity().findViewById(R.id.ScreenName);
-		listview = (ListView) getActivity().findViewById(R.id.list);
-
-		FetchTweets.setOnClickListener(new View.OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				if (!ScreenName.getText().toString().isEmpty()) {
-					downloadTweets(ScreenName.getText().toString());
-				}				
-				MainActivity.hideSoftKeyboard(getActivity(), getView());
-			}
-		});
 		
+		Bundle user = getArguments();
+        
+		listview = (ListView) getActivity().findViewById(R.id.list);
+		fetchTimeline = (LinearLayout) getActivity().findViewById(R.id.lview);
+		userProfile = (LinearLayout) getActivity().findViewById(R.id.user_lview);
+		
+		if (user != null && !user.containsKey("screenName")) {
+			userProfile.setVisibility(LinearLayout.GONE);
+	        FetchTweets = (Button) getActivity().findViewById(R.id.FetchTweets);
+			ScreenName = (EditText) getActivity().findViewById(R.id.ScreenName);
+	
+			FetchTweets.setOnClickListener(new View.OnClickListener() {			
+				@Override
+				public void onClick(View v) {
+					if (!ScreenName.getText().toString().isEmpty()) {
+						strScreenName = ScreenName.getText().toString();
+						fetchTimeline.setVisibility(LinearLayout.GONE);
+						screenname = (TextView) getActivity().findViewById(R.id.ScreenName);
+						profile = (ImageView) getActivity().findViewById(R.id.Profile);
+						userProfile.setVisibility(LinearLayout.VISIBLE);
+						
+						screenname.setText(strScreenName);
+						downloadTweets(strScreenName);
+					}				
+					MainActivity.hideSoftKeyboard(getActivity(), getView());
+				}
+			});
+		} else {
+			screenname = (TextView) getActivity().findViewById(R.id.ScreenName);
+			profile = (ImageView) getActivity().findViewById(R.id.Profile);
+			fetchTimeline.setVisibility(LinearLayout.GONE);
+			downloadTweets(user.getString("screenName"));
+			
+			screenname.setText(user.getString("screenName"));
+			imageDownloader.download(user.getString("profileURL"), profile);
+		}
 	}
 	
 	// download twitter timeline after first checking to see if there is a network connection
@@ -138,7 +169,6 @@ public class AddProfileFragment extends Fragment {
 				// just eat the exception
 			} catch (NullPointerException ex) {
 				// just eat the exception
-				Log.i("Pratham", "Invaid Twitter Handle - onPostExecute");
 				ScreenName.setText("");
 			}
 		}
@@ -146,10 +176,6 @@ public class AddProfileFragment extends Fragment {
 		// converts a string of JSON data into a Twitter object
 		private Twitter jsonToTwitter(String result) {
 			Twitter twits = null;
-			if (result != null)
-				Log.i("PRATHAM","STREAM RESULT = " + result);
-			else
-				Log.i("PRATHAM","RESULT = NULL");
 			if (result != null && result.length() > 0) {
 				try {
 					Gson gson = new Gson();
@@ -157,7 +183,6 @@ public class AddProfileFragment extends Fragment {
 					validHandle = true;
 				} catch (JsonSyntaxException ex) {
 					// just eat the exception
-					Log.i("Pratham", "Invalid Twitter Handle");
 					MainActivity.showToast(t, getActivity(), "Invalid Twitter Handle");	
 					validHandle = false;	
 					ScreenName.setText("");				
