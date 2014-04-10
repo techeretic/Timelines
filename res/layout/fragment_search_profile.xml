@@ -34,23 +34,25 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/user_lview"
+        android:layout_below="@id/lview"
         android:orientation="horizontal" >
 	    
         <ImageView 
-        android:layout_width="105dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:contentDescription="@string/desc_list_item_icon"
-        android:src="@drawable/ic_menu_cc_am" 
-        android:id="@+id/Profile"/>
+        	android:layout_width="150dp"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="12dp"
+	        android:layout_marginRight="12dp"
+	        android:contentDescription="@string/desc_list_item_icon"
+	        android:src="@drawable/ic_menu_cc_am" 
+		    android:layout_weight="0.5"
+	        android:id="@+id/Profile"/>
         
         <TextView 
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.90"
-        android:id="@+id/Name"
-        android:textSize="25sp" />
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="0.5"
+	        android:id="@+id/ScrName"
+	        android:textSize="25sp" />
         
 	</LinearLayout>
         
@@ -59,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@id/lview"
+        android:layout_below="@id/user_lview"
         android:stackFromBottom="false"
         android:transcriptMode="alwaysScroll" />
     

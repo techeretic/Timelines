@@ -35,6 +35,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class FindUsersFragment extends Fragment {
 	Toast t;
 	MyUserListAdapter myladapter;
 	ProgressDialog progressDialog;
+	LinearLayout fetchTimeline, userProfile;
 	
 	boolean validHandle;
 	
@@ -96,6 +98,10 @@ public class FindUsersFragment extends Fragment {
 		FetchUsers = (Button) getActivity().findViewById(R.id.FetchTweets);
 		SearchText = (EditText) getActivity().findViewById(R.id.ScreenName);
 		listview = (ListView) getActivity().findViewById(R.id.list);
+		fetchTimeline = (LinearLayout) getActivity().findViewById(R.id.lview);
+		userProfile = (LinearLayout) getActivity().findViewById(R.id.user_lview);
+		
+		userProfile.setVisibility(LinearLayout.GONE);
 		
 		FetchUsers.setText("Add User(s)");
 		SearchText.setHint("Type Name to search");

@@ -82,10 +82,10 @@ public class AddProfileFragment extends Fragment {
 		fetchTimeline = (LinearLayout) getActivity().findViewById(R.id.lview);
 		userProfile = (LinearLayout) getActivity().findViewById(R.id.user_lview);
 		
-		if (user != null && !user.containsKey("screenName")) {
+		if (user == null) {
 			userProfile.setVisibility(LinearLayout.GONE);
 	        FetchTweets = (Button) getActivity().findViewById(R.id.FetchTweets);
-			ScreenName = (EditText) getActivity().findViewById(R.id.ScreenName);
+			ScreenName = (EditText) getActivity().findViewById(R.id.ScrName);
 	
 			FetchTweets.setOnClickListener(new View.OnClickListener() {			
 				@Override
@@ -104,13 +104,16 @@ public class AddProfileFragment extends Fragment {
 				}
 			});
 		} else {
-			screenname = (TextView) getActivity().findViewById(R.id.ScreenName);
-			profile = (ImageView) getActivity().findViewById(R.id.Profile);
+			userProfile.setVisibility(LinearLayout.VISIBLE);
 			fetchTimeline.setVisibility(LinearLayout.GONE);
-			downloadTweets(user.getString("screenName"));
 			
-			screenname.setText(user.getString("screenName"));
+			screenname = (TextView) getActivity().findViewById(R.id.ScrName);
+			profile = (ImageView) getActivity().findViewById(R.id.Profile);
+			
 			imageDownloader.download(user.getString("profileURL"), profile);
+			screenname.setText(user.getString("screenName"));
+			
+			downloadTweets(user.getString("screenName"));
 		}
 	}
 	
